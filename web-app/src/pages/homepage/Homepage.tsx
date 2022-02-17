@@ -1,29 +1,49 @@
 import { Link } from "react-router-dom";
+import MenuIcon from "../../imgs/MenuIcon.svg";
+import DiskAndBasket from "../../imgs/DiskAndBasket.svg";
+import { useState } from "react";
 
 const Homepage = () => {
+  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
+
+  const closeModal = () => {
+    setMenuIsOpen(false);
+  };
+
   return (
-    <div className="h-screen w-screen bg-home-img bg-cover flex flex-col">
-      <div className="h-10 bg-dark-green text-white font-sora flex items-center">
-        <span className="ml-6 lg:text-3xl">Discr</span>
-      </div>
-      <div className="h-1/6 text-center flex items-end justify-center">
-        <div className="font-semibold w-72 lg:w-[28rem] lg:text-2xl">
-          The best place to buy,sell and trade Disc Golf Equipment
+    <div
+      className="h-screen w-screen bg-light-blue flex flex-col"
+      id="Homepage"
+    >
+      <div className="h-16 bg-white flex items-center">
+        <div className="flex-grow ml-4 text-2xl font-bold">Discr</div>
+        <div className="mr-6">
+          <img
+            className="md:hidden"
+            src={MenuIcon}
+            onClick={() => setMenuIsOpen(true)}
+          />
         </div>
       </div>
-      <div className="w-screen flex-grow flex flex-col lg:flex-row justify-end lg:justify-center items-center lg:items-end">
+      <div className="text-2xl w-64 text-center self-center mt-20">
+        Buy, Sell, and Trade Disc Golf Equipment
+      </div>
+      <div className="mt-24 flex flex-col items-center">
         <Link
           to="/signup"
-          className="w-3/6 lg:w-1/6 h-12 text-center mb-10 lg:mb-24 lg:mr-10 bg-orangish flex items-center justify-center rounded-lg font-semibold"
+          className="text-xl font-semibold bg-darkest-blue text-white drop-shadow-lg rounded-xl h-16 w-56 flex items-center justify-center"
         >
           Get Started
         </Link>
         <Link
           to="/signin"
-          className="w-3/6 lg:w-1/6 h-12 text-center mb-24 lg:ml-10 bg-off-white flex items-center justify-center rounded-lg font-semibold"
+          className="text-xl font-semibold bg-medium-blue text-white drop-shadow-lg rounded-xl h-16 w-56 flex items-center justify-center mt-10"
         >
           Sign In
         </Link>
+      </div>
+      <div className="flex justify-center mt-20">
+        <img className="w-4/6 md:w-3/6 lg:w-2/6 xl:w-80" src={DiskAndBasket} />
       </div>
     </div>
   );

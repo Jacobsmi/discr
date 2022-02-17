@@ -5,17 +5,13 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'home-img': "url('./imgs/field.jpg')",
+        'disc-and-basket': 'url(./imgs/DiskAndBasket.svg)',
       },
       colors: {
-        'dark-green': '#2C3F2D',
-        'off-white': '#F4F5F0',
-        'orangish': '#EFAD81'
+        'light-blue': '#E5F0F6',
+        'medium-blue': '#337299',
+        'darkest-blue': '#254356'
       },
-      fontFamily: {
-        'sora': ['Sora', 'sans-serif'],
-        'open-sans': ['Open Sans', 'sans-serif']
-      }
     },
   },
   plugins: [],
