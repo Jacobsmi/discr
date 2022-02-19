@@ -1,5 +1,5 @@
 import express from "express";
-import { body, validationResult } from "express-validator";
+import { body, matchedData, validationResult } from "express-validator";
 
 const router = express.Router();
 
@@ -16,6 +16,9 @@ router.post(
   (req, res) => {
     // Validate request body
     const errors = validationResult(req);
+    // Strip unused body
+    const allData = matchedData(req, { locations: ["body"] });
+
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
