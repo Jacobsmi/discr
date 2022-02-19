@@ -1,8 +1,37 @@
-import { Box, Button, IconButton, Input, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  IconButton,
+  Input,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+
+type SignupFormData = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirm: string;
+};
+
 const Signup = () => {
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormData>();
+
+  const signupSubmitHandler: SubmitHandler<SignupFormData> = (data) => {
+    console.log(data);
+  };
+
   return (
     <Box
       backgroundColor={"brand.100"}
@@ -27,43 +56,73 @@ const Signup = () => {
         </Text>
       </Box>
       <Box marginLeft={"10%"} marginTop={20}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("Submitting");
-          }}
-        >
+        <form onSubmit={handleSubmit(signupSubmitHandler)}>
           <Stack spacing={5}>
-            <Box>
-              <Input
-                backgroundColor={"white"}
-                placeholder="First Name"
-                w="40%"
-                marginRight={"5%"}
-              ></Input>
-              <Input
-                backgroundColor={"white"}
-                placeholder="Last Name"
-                w="40%"
-              ></Input>
+            <Box display={"flex"}>
+              <FormControl isInvalid={!!errors.firstname}>
+                <Input
+                  isInvalid={!!errors.firstname}
+                  backgroundColor={"white"}
+                  placeholder="First Name"
+                  w="70%"
+                  marginRight={"5%"}
+                  {...register("firstname", { required: true })}
+                ></Input>
+                {!!errors.firstname && (
+                  <FormErrorMessage>Cannot be empty</FormErrorMessage>
+                )}
+              </FormControl>
+              <FormControl isInvalid={!!errors.lastname}>
+                <Input
+                  isInvalid={!!errors.lastname}
+                  backgroundColor={"white"}
+                  placeholder="Last Name"
+                  w="70%"
+                  {...register("lastname", { required: true })}
+                ></Input>
+                {!!errors.lastname && (
+                  <FormErrorMessage>Cannot be empty</FormErrorMessage>
+                )}
+              </FormControl>
             </Box>
-            <Input
-              placeholder="E-Mail"
-              backgroundColor={"white"}
-              w="85%"
-            ></Input>
-            <Input
-              placeholder="Password"
-              backgroundColor={"white"}
-              w="85%"
-              type={"password"}
-            ></Input>
-            <Input
-              placeholder="Confirm Password"
-              backgroundColor={"white"}
-              w="85%"
-              type={"password"}
-            ></Input>
+            <FormControl isInvalid={!!errors.email}>
+              <Input
+                isInvalid={!!errors.email}
+                placeholder="E-Mail"
+                backgroundColor={"white"}
+                w="85%"
+                {...register("email", { required: true })}
+              ></Input>
+              {!!errors.email && (
+                <FormErrorMessage>Must be valid email</FormErrorMessage>
+              )}
+            </FormControl>
+            <FormControl isInvalid={!!errors.password}>
+              <Input
+                isInvalid={!!errors.password}
+                placeholder="Password"
+                backgroundColor={"white"}
+                w="85%"
+                type={"password"}
+                {...register("password", { required: true })}
+              ></Input>
+              {!!errors.password && (
+                <FormErrorMessage>Must be valid password</FormErrorMessage>
+              )}
+            </FormControl>
+            <FormControl isInvalid={!!errors.confirm}>
+              <Input
+                isInvalid={!!errors.confirm}
+                placeholder="Confirm Password"
+                backgroundColor={"white"}
+                w="85%"
+                type={"password"}
+                {...register("confirm", { required: true })}
+              ></Input>
+              {!!errors.confirm && (
+                <FormErrorMessage>Must match password</FormErrorMessage>
+              )}
+            </FormControl>
             <Button colorScheme="brand" w="85%" type="submit">
               Sign Up
             </Button>
