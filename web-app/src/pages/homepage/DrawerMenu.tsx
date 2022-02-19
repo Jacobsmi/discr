@@ -17,7 +17,6 @@ const DrawerMenu = ({ isDrawerOpen, onDrawerClose }: DrawerMenuProps) => {
   return (
     <Drawer isOpen={isDrawerOpen} onClose={() => onDrawerClose()}>
       <DrawerOverlay />
-
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>Welcome to Discr</DrawerHeader>
