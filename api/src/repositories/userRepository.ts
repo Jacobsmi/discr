@@ -7,11 +7,10 @@ export class UserRepository {
     this.prisma = new PrismaClient();
   }
   async createOneUser(newUserData: SignupArgs) {
-    const result = await this.prisma.user.create({
+    return this.prisma.user.create({
       data: {
         ...newUserData,
       },
     });
-    console.log(result);
   }
 }

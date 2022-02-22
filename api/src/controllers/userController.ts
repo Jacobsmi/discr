@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import express from "express";
 import { body, matchedData, validationResult } from "express-validator";
 import { SignupArgs } from "../models/userModels";
@@ -17,7 +18,7 @@ router.post(
   body("lastname").isString(),
   body("email").isEmail(),
   body("password").isString(),
-  async (req, res) => {
+  async (req, res, next) => {
     // Validate request body
     const errors = validationResult(req);
     // Strip unnecessary fields and assign to variable
@@ -27,8 +28,19 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    await userService.createOneUser(newUserData);
-    return res.status(200).send({ status: "test" });
+    try {
+      await userService.createOneUser(newUserData);
+      return res.status(200).send({ status: "success" });
+    } catch (e: any) {
+      if (
+        e.code === "P2002" &&
+        e.meta?.target.length === 1 &&
+        e.meta?.target[0] === "email"
+      ) {
+        return res.status(400).send({ error: "non_unique_email" });
+      }
+      return res.status(500).send({ error: "unhandled_error" });
+    }
   }
 );
 
