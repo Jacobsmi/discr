@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   FormControl,
@@ -8,9 +10,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import postCreateUser from "../../api/postCreateUser";
 
 type SignupFormData = {
   firstname: string;
@@ -21,15 +25,31 @@ type SignupFormData = {
 };
 
 const Signup = () => {
+  // Setting up hooks
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignupFormData>();
-
-  const signupSubmitHandler: SubmitHandler<SignupFormData> = (data) => {
-    console.log(data);
+  const [nonUniqueEmail, setNonUniqueEmail] = useState<boolean>(false);
+  const [unhandledError, setUnhandledError] = useState<boolean>(false);
+  // API call
+  const signupSubmitHandler: SubmitHandler<SignupFormData> = async (data) => {
+    try {
+      const result = await postCreateUser(data);
+      const resultBody = await result.json();
+      if (result.status !== 200) {
+        if (resultBody.error === "non_unique_email") {
+          console.log("Setting true");
+          setNonUniqueEmail(true);
+        } else {
+          setUnhandledError(true);
+        }
+      }
+    } catch (e) {
+      setUnhandledError(true);
+    }
   };
 
   return (
@@ -56,6 +76,12 @@ const Signup = () => {
         </Text>
       </Box>
       <Box marginLeft={"10%"} marginTop={20}>
+        {unhandledError && (
+          <Alert status="error" w="85%" mb={10}>
+            <AlertIcon />
+            Unhandled Error. Please try again.
+          </Alert>
+        )}
         <form onSubmit={handleSubmit(signupSubmitHandler)}>
           <Stack spacing={5}>
             <Box display={"flex"}>
@@ -85,9 +111,9 @@ const Signup = () => {
                 )}
               </FormControl>
             </Box>
-            <FormControl isInvalid={!!errors.email}>
+            <FormControl isInvalid={!!errors.email || nonUniqueEmail}>
               <Input
-                isInvalid={!!errors.email}
+                isInvalid={!!errors.email || nonUniqueEmail}
                 placeholder="E-Mail"
                 backgroundColor={"white"}
                 w="85%"
@@ -95,6 +121,9 @@ const Signup = () => {
               ></Input>
               {!!errors.email && (
                 <FormErrorMessage>Must be valid email</FormErrorMessage>
+              )}
+              {nonUniqueEmail && (
+                <FormErrorMessage>E-Mail already in use.</FormErrorMessage>
               )}
             </FormControl>
             <FormControl isInvalid={!!errors.password}>

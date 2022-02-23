@@ -18,7 +18,7 @@ router.post(
   body("lastname").isString(),
   body("email").isEmail(),
   body("password").isString(),
-  async (req, res, next) => {
+  async (req, res) => {
     // Validate request body
     const errors = validationResult(req);
     // Strip unnecessary fields and assign to variable
